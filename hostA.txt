@@ -1,0 +1,13 @@
+/etc/network/interfaces
+
+auto enp0s8
+iface enp0s8 inet static
+address 192.168.0.1
+natmask 255.255.255.0
+gateway 192.168.0.2
+
+
+#check
+ping 192.168.1.1
+
+
