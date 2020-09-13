@@ -1,0 +1,42 @@
+
+#install dnsmasq on host c ( router )
+1. sudo apt-get install dnsmasq
+# edit /etc/dnsmasq.conf - add domain
+2  ------
+   domain=lab4.com
+   -------
+3. edit /etc/dhcp/dhclient.conf delete comment
+prepend domain-name-servers 127.0.0.1;
+4. edit /etc/resolv.conf add - # install resolvconf
+  nameserver 127.0.0.1
+Example:
+-----------
+nameserver 127.0.0.1
+search lab4.com
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+------------------------------
+# reload dnsmasq
+5. service dnsmasq reload
+
+
+######################################
+# Edit dns nameservers on hostA and hostB
+# Edit resolv.conf ( A )
++ nameserver 192.168.1.2
+# Edit resolv.conf ( B )
+ + nameserver 192.168.1.2
+# install resolvconf on hostA hostB
+sudo apt install resolvconf
+sudo service resolvconf restart
+after reload system
+
+############################
+
+Check:
+nslookup sveta.lab4.com
+ping sveta.lab4.com
+
+Also, if you use changes from previous task ( firewall ), you must give access on internet to hostB for download resolvconf package (firewall_nat.sh)
+
+
