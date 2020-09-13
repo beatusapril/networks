@@ -1,0 +1,30 @@
+dnsmasq поставить на маршрутизаторе.
+2. маршр nano /etc/dnsmasq.conf
+------
+domain=lab4.com
+3. nano /etc/dhcp/dhclient.conf
+раскомментировать prepend domain-name-servers 127.0.0.1;
+4. 
+в /etc/resolv.conf первая строчка nameserver 127.0.0.1
+-----------
+nameserver 127.0.0.1
+search lab4.com
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+------------------------------
+5.service dnsmasq reload - перезагрузить
+на хостах поменять адрес сервера днс проверить утилитой nslookup
+nano /etc/resolv.conf
+дописать адрес
+nameserver 192.168.1.2
+-----
+sudo apt install resolvconf
+sudo service resolvconf restart
+перезагрузить машину
+
+Проверка:
+nslookup sveta.lab4.com
+ping sveta.lab4.com
+
+также из предыдущих заданий необходимо разрешить доступ в интернет второму хосту ( если есть настройки в iptables - файл firewall_nat.sh)
+
