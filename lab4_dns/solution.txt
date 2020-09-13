@@ -39,4 +39,3 @@ ping sveta.lab4.com
 
 Also, if you use changes from previous task ( firewall ), you must give access on internet to hostB for download resolvconf package (firewall_nat.sh)
 
-
