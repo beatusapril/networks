@@ -13,24 +13,24 @@ INTERFACESv6=""
 
 # add follow rows
 # first row for dchp log
-echo 'log-facility local7;' >> /etc/dhcp/dhcpd.conf
-option domain-name "example.org";
-option domain-name-servers ns1.example.org, ns2.example.org;
-
-default-lease-time 600;
+log-facility local7;
+default-lease-time 3600;
 max-lease-time 7200;
-
-ddns-update-style none;
-
 authoritative;
+
 subnet 192.168.5.0 netmask 255.255.255.0 {
         option routers                  192.168.5.1;
         option subnet-mask              255.255.255.0;
-        option domain-search            " merionet.ru ";
-        option domain-name-servers      192.168.5.1;
-        range 192.168.5.10   192.168.5.100;
-        range 192.168.5.110  192.168.5.200;
+        range   192.168.5.110   192.168.5.200;
 }
+
+subnet 192.168.1.0 netmask 255.255.255.0 {
+        option routers                  192.168.1.2;
+        option subnet-mask              255.255.255.0;
+        range   192.168.1.110   192.168.1.200;
+}
+
+
 
 # add ip address router
 sudo nano /etc/network/interfaces
@@ -52,18 +52,17 @@ sudo ufw reload
 
 # ------- DCHP CLIENT ----------------
 
-# add default gateway on interface with dchp 
-# ip addres router is ip address gateway
-sudo nano /etc/network/interfaces
-# add follow rows
-auto enp0s9
-iface enp0s9 inet dhcp
-gateway 192.168.5.1
-netmask 255.255.255.192
+# edit netplan ( Ubunyu 18.04)
+#  /etc/netplan/50-cloud-init.yaml
+network:
+    ethernets:
+        enp0s9:
+            dhcp4: true
+    version: 2
 
 # restart networking service
 
-sudo systemctl restart networking
+sudo netplan apply
 
 # repeat on hostB
 
@@ -81,6 +80,5 @@ echo '& ~' >> /etc/rsyslog.d/dhcpd.conf
 
 # ---  CHECK 
 ip addr
-
 # see log /var/log/dhcpd.log
 
