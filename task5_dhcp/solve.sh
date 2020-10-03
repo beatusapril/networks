@@ -1,4 +1,4 @@
-# -------------- DCHP server ---------------------
+# -------------- DHCP server ---------------------
 # install isc-dhcp-server
 sudo apt install isc-dhcp-server
 # add interface which will listen dchp process
