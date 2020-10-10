@@ -1,0 +1,74 @@
+# install apache
+sudo apt update
+sudo apt install apache2
+
+sudo systemctl start apache2
+
+# create two folder for sites
+sudo mkdir /var/www/cat.com
+sudo mkdir /var/www/dog.com
+
+# add user catalog
+sudo chown -R $USER:$USER /var/www/cat.com
+sudo chown -R $USER:$USER /var/www/dog.com
+
+# check permission
+sudo chmod -R 755 /var/www/cat.com
+sudo chmod -R 755 /var/www/dog.com
+
+# create two index.html
+sudo nano /var/www/cat.com/index.html
+sudo nano /var/www/dog.com/index.html
+
+# create custom apache conf in /etc/apache2/sites-available/dog.com.conf and /etc/apache2/sites-available/cat.com.conf 
+
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        ServerName cat3456.com
+        ServerAlias www.cat3456..com
+        DocumentRoot /var/www/cat3456.com
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
+
+# and dog.com.conf
+
+<VirtualHost *:80>
+    ServerAdmin zina@lab4.com
+    ServerName dog3456.com
+    ServerAlias dog3456.com
+    DocumentRoot /var/www/dog3456.com
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+# activate file 
+sudo a2ensite dog3456.com.conf
+sudo a2ensite cat3456.com.conf
+
+# disable default file
+sudo a2dissite 000-default.conf
+
+# check apache config
+sudo apache2ctl configtest
+
+# reload apache 
+sudo systemctl restart apache2
+
+
+#------------ router ---------------------
+# add to /etc/hosts
+192.168.0.1 cat3456.com
+192.168.0.1 dog3456.com
+
+
+# check that page is different
+wget cat3456.com
+wget dog3456.com
+
+
+# check access log on apache server
+cat /var/log/apache2/access.log
+
+
