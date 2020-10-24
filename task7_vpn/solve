@@ -1,0 +1,62 @@
+#------------------ SERVER ------------------------------
+# update packages
+apt-get update
+apt-get upgrade
+
+# install openvpn
+apt-get install openvpn
+# install easy-rsa (for encryption)
+apt-get install easy-rsa
+cd /etc/openvpn/ && make-cadir easy-rsa
+cd /etc/openvpn/easy-rsa
+
+# create symbol link on openssl configuration file
+ln -s openssl-1.0.0.cnf openssl.cnf
+# init script vars
+source ./vars
+./clean-all
+
+# for create centr certification 
+./build-ca
+# create server key
+./build-key-server server
+
+# generate client key ( one client - one unoque key )
+./build-key client3
+
+# generate DH key
+./build-dh
+
+# move cert and keys
+# server
+cd /etc/openvpn/easy-rsa/keys
+cp ca.crt ca.key dh2048.pem server.crt server.key /etc/openvpn
+
+# server 
+# create sample config 
+gunzip -c /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz > /etc/openvpn/server.conf
+nano /etc/openvpn/server.conf
+# change name certificate
+
+# start server
+/etc/init.d/openvpn start
+/etc/init.d/openvpn status
+
+
+#-----------------CLIENT-------------------------------
+# install openvpn
+# keys ca.crt, client3.crt, client3.key move to /etc/openvpn
+
+# create sample client openvpn config file
+cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf /root
+# nano /root/client.conf
+# change “# The hostname/IP and port of the server”. For parameter remote change my-server-1 on IP-address
+“#SSL/TLS parms.”. change key name
+#connect
+sudo openvpn client.conf 
+
+# check 
+ssh vika@10.8.0.6
+ssh sveta@10.8.0.1
+ping 10.8.0.6
+ping 10.8.0.1
